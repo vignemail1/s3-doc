@@ -1,0 +1,32 @@
+/* Styles personnalisés pour la documentation systemd */
+
+:root {
+  --md-primary-fg-color: #3f51b5;
+  --md-accent-fg-color: #3f51b5;
+  --md-mermaid-label-fg-color: #000;
+}
+
+
+.md-typeset code {
+  font-size: 0.85em;
+}
+
+.md-typeset pre > code {
+  font-size: 0.8em;
+}
+
+/* Amélioration des admonitions */
+.md-typeset .admonition {
+  border-left: 0.2rem solid;
+}
+
+/* Grille de contenu élargie */
+.md-grid {
+  max-width: 95vw;
+}
+
+/* On verrouille le theme pour les schéma mermaid */
+
+[data-md-color-scheme="slate"] {
+  --md-mermaid-label-fg-color: #000;
+}
