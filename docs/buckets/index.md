@@ -1,175 +1,49 @@
----
-title: Buckets
-description: Lister, naviguer et inspecter les buckets S3
-icon: material/bucket
----
+# Buckets
 
-# Gestion des buckets
+Un **bucket** est un espace de stockage qui contient des objets. Il est généralement créé et configuré par l’administrateur du service. Selon vos droits, vous pouvez consulter un bucket, y déposer des fichiers ou les récupérer.
 
-Cette section couvre les opérations de navigation et d'inspection des buckets
-et de leur contenu depuis la CLI.
+## Bucket, objet et « dossier »
 
----
+Un objet est identifié par une clé à l’intérieur d’un bucket. Par exemple :
 
-## Lister les buckets accessibles
-
-```bash
-# Tous les buckets du compte
-aws s3 ls --profile <MON_PROFIL>
+```text
+Bucket : equipe-projets
+Clé    : rapports/2026/bilan.pdf
 ```
 
-Résultat :
+Dans de nombreuses interfaces, les `/` donnent l’impression d’une arborescence de dossiers. Ils font en réalité partie de la clé de l’objet : les « dossiers » peuvent être une représentation de préfixes, et non des répertoires traditionnels.
 
-```
-2026-01-15 10:00:00 mon-bucket-prod
-2026-03-01 08:30:00 mon-bucket-staging
-2026-05-10 14:22:00 <MON_BUCKET>
-```
+## Trouver le bon bucket
 
-!!! note "Service S3 privé"
-    Pour un service compatible S3 (MinIO, Ceph…), les buckets affichés sont ceux
-    accessibles avec les credentials du profil, pas tous les buckets du service.
+1. Choisissez le bucket indiqué par votre équipe ou votre administrateur.
+2. Vérifiez que vous avez les droits requis pour l’action envisagée.
+3. Si plusieurs buckets ont des noms proches, confirmez lequel utiliser avant d’y déposer des données.
 
----
+Ne créez pas de bucket et ne modifiez pas ses paramètres sans consigne : ces actions peuvent être réservées à l’administration.
 
-## Lister le contenu d'un bucket
+## Parcourir les objets
 
-### Racine du bucket
+Dans l’outil utilisé, ouvrez le bucket puis parcourez les objets ou recherchez un préfixe. La présentation et les commandes diffèrent selon l’outil. Si vous ne voyez pas un objet, vérifiez le bucket, le préfixe et les droits d’accès ; consultez aussi [Recherche](../recherche/index.md).
 
-```bash
-aws s3 ls s3://<MON_BUCKET>/ --profile <MON_PROFIL>
-```
+Exemple de clés partageant un préfixe :
 
-### Préfixe spécifique (sous-dossier logique)
-
-```bash
-aws s3 ls s3://<MON_BUCKET>/backups/ --profile <MON_PROFIL>
+```text
+rapports/2026/bilan.pdf
+rapports/2026/budget.csv
+rapports/2025/bilan.pdf
 ```
 
-### Listing récursif avec résumé
+Le préfixe `rapports/2026/` permet de regrouper les deux premiers objets.
 
-```bash
-aws s3 ls s3://<MON_BUCKET>/backups/ \
-  --recursive \
-  --human-readable \
-  --summarize \
-  --profile <MON_PROFIL>
-```
+## Avant de supprimer ou déplacer un objet
 
-Résultat :
+- Confirmez le bucket et la clé complets : des noms proches sont faciles à confondre.
+- Vérifiez que la suppression ou le déplacement est autorisé.
+- Assurez-vous que l’objet n’est plus nécessaire et qu’une copie existe si elle est requise.
+- Tenez compte des règles de conservation ou de versioning définies par votre service.
 
-```
-2026-09-29 02:00:05    1.2 MiB backups/postgres/2026-09-29.sql
-2026-09-28 02:00:03    1.1 MiB backups/postgres/2026-09-28.sql
-...
+La suppression peut être irréversible ou soumise aux règles de conservation de l’organisation. En cas de doute, demandez confirmation à l’administrateur.
 
-Total Objects: 30
-   Total Size: 35.4 MiB
-```
+## Limites propres au service
 
----
-
-## Inspecter les métadonnées d'un objet
-
-```bash
-aws s3api head-object \
-  --bucket <MON_BUCKET> \
-  --key backups/postgres/2026-09-29.sql \
-  --profile <MON_PROFIL>
-```
-
-Résultat :
-
-```json
-{
-    "ContentLength": 1258496,
-    "ContentType": "binary/octet-stream",
-    "ETag": "\"d41d8cd98f00b204e9800998ecf8427e\"",
-    "LastModified": "2026-09-29T02:00:05+00:00",
-    "Metadata": {}
-}
-```
-
----
-
-## Inspecter la configuration d'un bucket
-
-Ces commandes utilisent `s3api` (interface bas niveau) :
-
-=== "Politique d'accès"
-
-    ```bash
-    aws s3api get-bucket-policy \
-      --bucket <MON_BUCKET> \
-      --profile <MON_PROFIL> \
-      --query Policy \
-      --output text | python3 -m json.tool
-    ```
-
-=== "Versionnement"
-
-    ```bash
-    aws s3api get-bucket-versioning \
-      --bucket <MON_BUCKET> \
-      --profile <MON_PROFIL>
-    ```
-
-=== "Règles de cycle de vie"
-
-    ```bash
-    aws s3api get-bucket-lifecycle-configuration \
-      --bucket <MON_BUCKET> \
-      --profile <MON_PROFIL>
-    ```
-
-=== "ACL"
-
-    ```bash
-    aws s3api get-bucket-acl \
-      --bucket <MON_BUCKET> \
-      --profile <MON_PROFIL>
-    ```
-
----
-
-## Filtrer la sortie avec `--query`
-
-AWS CLI supporte les expressions **JMESPath** via `--query` pour filtrer
-les résultats JSON :
-
-```bash
-# Lister uniquement les clés d'objets d'un préfixe
-aws s3api list-objects-v2 \
-  --bucket <MON_BUCKET> \
-  --prefix backups/ \
-  --query 'Contents[].Key' \
-  --output text \
-  --profile <MON_PROFIL>
-```
-
-```bash
-# Objets modifiés après une date
-aws s3api list-objects-v2 \
-  --bucket <MON_BUCKET> \
-  --prefix logs/ \
-  --query 'Contents[?LastModified>=`2026-09-01`].{Key: Key, Size: Size}' \
-  --output table \
-  --profile <MON_PROFIL>
-```
-
----
-
-## Changer le format de sortie
-
-Le format par défaut du profil peut être surchargé avec `--output` :
-
-| Format | Usage |
-|--------|-------|
-| `json` | Traitement programmatique (jq, Python) |
-| `table` | Lecture humaine dans le terminal |
-| `text` | Parsing shell simple (awk, cut) |
-| `yaml` | Lisibilité YAML |
-
-```bash
-aws s3 ls s3://<MON_BUCKET>/ --profile <MON_PROFIL> --output table
-```
+La disponibilité de la création de buckets, du versioning, du chiffrement, des règles de conservation et des opérations de suppression dépend de votre service et de vos droits. Référez-vous aux consignes de votre organisation plutôt qu’à une fonctionnalité générale de S3.

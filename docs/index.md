@@ -1,48 +1,37 @@
----
-title: Documentation S3
-description: Guide utilisateur complet pour l'accès et la gestion des données S3
-icon: material/home
----
+# Bienvenue dans la documentation S3
 
-# Documentation S3
+Cette documentation vous aide à utiliser le stockage de fichiers compatible S3, depuis la configuration de votre accès jusqu’au transfert de vos objets.
 
-Bienvenue dans la documentation utilisateur du service de stockage objet S3.
+> **À retenir :** S3 est un service de stockage d’objets. Les commandes et options disponibles peuvent varier selon l’outil utilisé et la configuration de votre service.
 
-Ce guide couvre l'installation et la configuration de l'outil en ligne de commande `aws`,
-la gestion des identités et des accès, ainsi que l'ensemble des opérations courantes
-sur les buckets et les objets.
+## Que souhaitez-vous faire ?
 
-## Organisation de la documentation
+- **[Comprendre les concepts S3](concepts/index.md)** — bucket, objet, clé et préfixe.
+- **[Configurer mon accès](authentification/index.md)** — préparer et protéger vos identifiants.
+- **[Installer un outil](installation/index.md)** — consulter les instructions d’installation disponibles.
+- **[Gérer mes buckets](buckets/index.md)** — comprendre où sont stockés vos objets.
+- **[Transférer des fichiers](transfert/index.md)** — suivre les étapes avant, pendant et après un transfert.
+- **[Rechercher des objets](recherche/index.md)** — retrouver un fichier et diagnostiquer une recherche sans résultat.
 
-| Section | Contenu |
-|---------|----------|
-| [Installation](installation/index.md) | Installation d'AWS CLI et configuration initiale |
-| [Concepts](concepts/index.md) | Buckets, objets, IAM, STS — comprendre le modèle |
-| [Authentification](authentification/index.md) | Profils, SSO, rôles IAM et multi-profils |
-| [Buckets](buckets/index.md) | Lister, créer, naviguer dans les buckets |
-| [Transfert](transfert/index.md) | Envoyer, télécharger, synchroniser des données |
-| [Recherche](recherche/index.md) | Trouver des objets par nom, préfixe ou filtre |
+## Pour commencer
 
-## Placeholders utilisés dans cette documentation
+1. Vérifiez que vous avez reçu les informations de connexion et les droits nécessaires.
+2. Installez l’outil décrit dans la page **Installation**.
+3. Configurez vos identifiants en suivant la page **Authentification**.
+4. Effectuez un petit transfert de test vers le bucket qui vous a été indiqué.
+5. Vérifiez que l’objet apparaît à l’emplacement attendu.
 
-Les valeurs entre chevrons `<...>` sont des **placeholders** à remplacer par vos propres valeurs :
+Si une information propre à votre organisation vous manque — par exemple l’adresse du service, le nom du bucket ou les limites de transfert — demandez-la à votre administrateur. Ne remplacez pas ces paramètres par des valeurs supposées.
 
-| Placeholder | Signification |
-|-------------|---------------|
-| `<S3_ENDPOINT_URL>` | URL du point d'accès S3 (ex: `https://s3.example.com`) |
-| `<S3_REGION>` | Région AWS ou région du service privé (ex: `eu-west-3`, `us-east-1`) |
-| `<MON_BUCKET>` | Nom de votre bucket S3 |
-| `<MON_PROFIL>` | Nom du profil AWS CLI configuré localement |
-| `<ACCOUNT_ID>` | Identifiant numérique du compte AWS (12 chiffres) |
-| `<ROLE_ARN>` | ARN complet du rôle IAM à assumer |
-| `<ACCESS_KEY_ID>` | Identifiant de la clé d'accès IAM |
-| `<SECRET_ACCESS_KEY>` | Clé secrète associée (ne jamais partager) |
-| `<SESSION_TOKEN>` | Token de session STS (credentials temporaires) |
-| `<MON_UTILISATEUR>` | Nom d'utilisateur IAM |
-| `<MON_GROUPE>` | Nom du groupe IAM |
+## Vocabulaire rapide
 
-!!! info "Service S3 compatible"
-    Cette documentation s'applique aussi bien à AWS S3 qu'à tout service compatible
-    S3 (MinIO, Ceph RGW, Scality, OVHcloud Object Storage…).
-    Dans ce cas, précisez systématiquement `--endpoint-url <S3_ENDPOINT_URL>` dans vos commandes
-    ou configurez-le dans votre profil (cf. [Authentification](authentification/index.md)).
+- Un **bucket** est un espace de stockage qui contient des objets.
+- Un **objet** est un fichier stocké avec ses données et ses métadonnées.
+- Une **clé** est le nom complet qui identifie un objet dans un bucket.
+- Un **préfixe** est le début d’une clé. Il sert à regrouper et à filtrer des objets ; il ne correspond pas nécessairement à un vrai dossier.
+
+Voir [les concepts S3](concepts/index.md) pour des exemples.
+
+## Besoin d’aide ?
+
+Consultez d’abord la section correspondant à votre tâche. Pour demander de l’aide, indiquez l’outil utilisé, l’étape concernée et le message d’erreur. **Ne transmettez jamais vos clés secrètes, mots de passe ou jetons d’accès.**
