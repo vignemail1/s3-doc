@@ -1,8 +1,10 @@
 nav:
-  - index.md
-  - concepts
-  - installation
-  - authentification
-  - buckets
-  - transfert
-  - recherche
+  - Accueil: index.md
+  - Démarrer: 01-demarrer
+  - Comprendre S3: 02-comprendre-s3
+  - Requêtes et protocole: 03-requetes-protocole
+  - IAM et authentification: 04-iam-authentification
+  - Contrôle d’accès: 05-controle-acces
+  - AWS CLI: 06-cli
+  - Opérations courantes: 07-operations
+  - Dépannage et sécurité: 08-depannage-securite
