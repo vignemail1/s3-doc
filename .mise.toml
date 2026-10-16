@@ -1,4 +1,4 @@
-# Configuration mise pour le projet systemd-doc
+# Configuration mise pour le projet s3-doc
 # https://mise.jdx.dev
 
 [tools]
@@ -57,4 +57,3 @@ run = """
     exit 1
   fi
 """
-
